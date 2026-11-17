@@ -1,5 +1,5 @@
 {
-  "displayName": "ADO Wiki Agent App",
+  "displayName": "WikiSage App",
   "web": {
     "redirectUris": [
       "https://<your-app-name>.azurewebsites.net/.auth/login/aad/callback"

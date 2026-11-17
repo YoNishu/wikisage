@@ -1,4 +1,4 @@
-# Deploy script for ADO Wiki Assistant to Azure App Service
+# Deploy script for WikiSage to Azure App Service
 # Usage: .\deploy.ps1
 # Prerequisites: az CLI installed and logged in (az login)
 
@@ -9,11 +9,11 @@ $ResourceGroup = "<your-resource-group>"
 $AppName = "<your-app-name>"
 $ZipPath = "app.zip"
 $Files = @(
-    "streamlit_app.py",
-    "query.py",
-    "azure_search_client.py",
-    "utils.py",
-    "ingest.py",
+    "app.py",
+    "retriever.py",
+    "search_store.py",
+    "common.py",
+    "indexer.py",
     "startup.sh",
     "requirements.txt",
     "runtime.txt"
@@ -22,7 +22,7 @@ $Files = @(
 # Ensure az is in PATH
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
-Write-Host "=== ADO Wiki Assistant Deploy ===" -ForegroundColor Cyan
+Write-Host "=== WikiSage Deploy ===" -ForegroundColor Cyan
 
 # Step 1: Fix startup.sh line endings (CRLF -> LF)
 Write-Host "[1/4] Fixing startup.sh line endings..." -ForegroundColor Yellow

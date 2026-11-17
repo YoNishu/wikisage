@@ -11,7 +11,7 @@ Two-plane design: **offline ingestion** (local) and **online query** (Azure App 
                       │ REST API + PAT
                 ┌─────▼──────────┐
                 │  Ingestion     │  Local machine
-                │  ingest.py     │
+                │  indexer.py     │
                 ├────────────────┤
                 │ Fetch pages    │
                 │ Chunk (800 tok)│
@@ -29,7 +29,7 @@ Two-plane design: **offline ingestion** (local) and **online query** (Azure App 
                        │
             ┌──────────▼───────────┐
             │ Query Plane          │  Azure App Service
-            │ streamlit_app.py     │
+            │ app.py     │
             ├──────────────────────┤
             │ Chat history         │
             │ Query contextualize  │
@@ -51,14 +51,14 @@ Two-plane design: **offline ingestion** (local) and **online query** (Azure App 
 
 | Component | File | Role |
 |-----------|------|------|
-| Config | `utils.py` (`ConfigManager`) | Load env vars or Key Vault secrets |
-| Wiki Fetcher | `utils.py` (`WikiContentFetcher`) | Recursive ADO Wiki page retrieval |
-| Chunker | `utils.py` (`SmartContentChunker`) | Structure-aware markdown chunking (800 tok, 200 overlap) |
-| Embedder | `utils.py` (`EmbeddingGenerator`) | Batched Azure OpenAI embedding (text-embedding-3-large) |
-| Search Client | `azure_search_client.py` | Index CRUD, hybrid + semantic search, neighbor fetch |
-| Ingestor | `ingest.py` (`RAGIngestor`) | Delta detection, contextual enrichment, upsert orchestration |
-| Query Processor | `query.py` (`EnhancedQueryProcessor`) | Full query pipeline with chat history |
-| Chat UI | `streamlit_app.py` | Multi-turn Streamlit chat with session metrics |
+| Config | `common.py` (`ConfigManager`) | Load env vars or Key Vault secrets |
+| Wiki Fetcher | `common.py` (`WikiContentFetcher`) | Recursive ADO Wiki page retrieval |
+| Chunker | `common.py` (`SmartContentChunker`) | Structure-aware markdown chunking (800 tok, 200 overlap) |
+| Embedder | `common.py` (`EmbeddingGenerator`) | Batched Azure OpenAI embedding (text-embedding-3-large) |
+| Search Client | `search_store.py` | Index CRUD, hybrid + semantic search, neighbor fetch |
+| Ingestor | `indexer.py` (`RAGIngestor`) | Delta detection, contextual enrichment, upsert orchestration |
+| Query Processor | `retriever.py` (`EnhancedQueryProcessor`) | Full query pipeline with chat history |
+| Chat UI | `app.py` | Multi-turn Streamlit chat with session metrics |
 
 ## Ingestion Pipeline
 

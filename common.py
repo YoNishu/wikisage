@@ -1,5 +1,5 @@
 """
-Simple utility functions for ADO Wiki RAG system - Deployment Fix Version.
+Shared helpers for WikiSage: config loading, wiki fetching, chunking and embeddings.
 """
 
 import os
@@ -110,7 +110,7 @@ class ConfigManager:
     @staticmethod
     def _load_from_env() -> Dict[str, str]:
         """Load configuration from .env file and environment variables."""
-        # Load .env — look in same directory as utils.py first, then CWD
+        # Load .env — look in same directory as common.py first, then CWD
         env_path = Path(__file__).parent / ".env"
         if not env_path.exists():
             env_path = Path(".env")

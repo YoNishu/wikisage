@@ -1,5 +1,5 @@
 """
-Beautiful Streamlit interface for the ADO Wiki RAG system.
+Beautiful Streamlit interface for WikiSage.
 A modern, user-friendly web application for querying your Azure DevOps wiki content.
 """
 
@@ -9,12 +9,12 @@ from typing import List, Dict, Any
 from datetime import datetime
 
 # Import your existing query components
-from query import EnhancedQueryProcessor, QueryResult, QueryResponse
-from utils import ConfigManager, logger
+from retriever import EnhancedQueryProcessor, QueryResult, QueryResponse
+from common import ConfigManager, logger
 
 # Configure Streamlit page
 st.set_page_config(
-    page_title="ADO Wiki Agent",
+    page_title="WikiSage",
     page_icon="�️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -170,7 +170,7 @@ def main():
     <div class="query-container" style="display: flex; align-items: center; gap: 1rem;">
         <img src="https://raw.githubusercontent.com/David-Summers/Azure-Design/master/SVG_Azure_All/Azure%20Front%20Door.svg" style="height: 50px;" />
         <div>
-            <h1 style="margin: 0; font-size: 2.2rem;">ADO Wiki Agent</h1>
+            <h1 style="margin: 0; font-size: 2.2rem;">WikiSage</h1>
             <p style="margin: 0.5rem 0 0 0; font-size: 1rem; opacity: 0.9;">
                 Chat with your Azure DevOps wiki &mdash; multi-turn conversations with RAG
             </p>
@@ -180,7 +180,7 @@ def main():
     
     # Initialize processor
     if st.session_state.processor is None:
-        with st.spinner("🚀 Initializing ADO Wiki Agent..."):
+        with st.spinner("🚀 Initializing WikiSage..."):
             st.session_state.processor = get_query_processor()
     
     if st.session_state.processor is None:
@@ -192,7 +192,7 @@ def main():
         st.markdown("""
         <div style="text-align: center; margin-bottom: 1rem;">
             <img src="https://raw.githubusercontent.com/David-Summers/Azure-Design/master/SVG_Azure_All/Azure%20Front%20Door.svg" style="height: 40px;" />
-            <div style="font-weight: bold; font-size: 1.1rem;">ADO Wiki Agent</div>
+            <div style="font-weight: bold; font-size: 1.1rem;">WikiSage</div>
             <div style="font-size: 0.8rem; color: #888;">GPT-4.1 + Azure AI Search</div>
         </div>
         """, unsafe_allow_html=True)
@@ -256,7 +256,7 @@ def main():
     # Welcome message if empty
     if not st.session_state.messages:
         with st.chat_message("assistant"):
-            st.markdown("👋 Hi! I'm your ADO Wiki Agent. Ask me anything covered in your team's wiki. I'll search, retrieve, and synthesize answers from your documentation. You can ask follow-up questions and I'll keep context across our conversation.")
+            st.markdown("👋 Hi! I'm WikiSage. Ask me anything covered in your team's wiki. I'll search, retrieve, and synthesize answers from your documentation. You can ask follow-up questions and I'll keep context across our conversation.")
     
     # Chat input
     user_input = st.chat_input("Ask about architecture, runbooks, deployments...")
@@ -339,7 +339,7 @@ def main():
     # Footer
     st.markdown("""
     <div style="text-align: center; color: #888; padding: 0.5rem; font-size: 0.8rem;">
-        GPT-4.1 + text-embedding-3-large + Azure AI Search | ADO Wiki Agent with HyDE + RRF + LLM Reranking
+        GPT-4.1 + text-embedding-3-large + Azure AI Search | WikiSage with HyDE + RRF + LLM Reranking
     </div>
     """, unsafe_allow_html=True)
 

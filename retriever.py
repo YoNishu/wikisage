@@ -1,5 +1,5 @@
 """
-Enhanced query interface for the ADO Wiki RAG system.
+Enhanced query interface for WikiSage.
 Provides intelligent question answering with context-aware retrieval and response generation.
 """
 
@@ -10,8 +10,8 @@ from dataclasses import dataclass
 import openai
 import tiktoken
 import json
-from utils import ConfigManager, logger
-from azure_search_client import AzureSearchVectorStore
+from common import ConfigManager, logger
+from search_store import AzureSearchVectorStore
 
 @dataclass
 class QueryResult:
@@ -111,7 +111,7 @@ class EnhancedQueryProcessor:
                     
                 except Exception as e:
                     logger.error(f"Error accessing ChromaDB collection: {str(e)}")
-                    logger.error("Please run 'python ingest.py' first to create the knowledge base")
+                    logger.error("Please run 'python indexer.py' first to create the knowledge base")
                     sys.exit(1)
                 
                 self.use_azure_search = False
@@ -484,7 +484,7 @@ class EnhancedQueryProcessor:
         # Create system message
         system_message = {
             "role": "system",
-            "content": """You are the ADO Wiki Agent — an expert assistant that answers questions about an engineering team's systems, operations, and DevOps practices using the team's Azure DevOps wiki.
+            "content": """You are WikiSage — an expert assistant that answers questions about an engineering team's systems, operations, and DevOps practices using the team's Azure DevOps wiki.
 
 Your task is to provide the most accurate, comprehensive, and actionable answer possible based SOLELY on the provided context documents from the team's wiki.
 
@@ -812,7 +812,7 @@ class InteractiveQueryInterface:
     def run(self):
         """Run the interactive query interface."""
         print("=" * 60)
-        print("ADO WIKI KNOWLEDGE BASE - INTERACTIVE QUERY")
+        print("WIKISAGE - INTERACTIVE QUERY")
         print("=" * 60)
         print("Ask questions about your Azure DevOps wiki content!")
         print("Type 'quit' or 'exit' to stop, 'help' for guidance.\n")
@@ -862,7 +862,7 @@ class InteractiveQueryInterface:
     def show_help(self):
         """Show help information."""
         help_text = """
-🆘 HELP - How to use the ADO Wiki Query System:
+🆘 HELP - How to use WikiSage:
 
 📝 QUERY EXAMPLES:
 • "How do I set up performance testing with K6?"

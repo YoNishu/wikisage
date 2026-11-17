@@ -26,7 +26,7 @@ from azure.search.documents.indexes.models import (
     SemanticSearch
 )
 from azure.core.credentials import AzureKeyCredential
-from utils import logger
+from common import logger
 
 def encode_document_id(doc_id: str) -> str:
     """Encode document ID to be Azure Search compatible using URL-safe base64."""

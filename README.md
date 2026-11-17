@@ -1,4 +1,4 @@
-# ADO Wiki RAG Agent — Technical Deep Dive
+# WikiSage — Technical Deep Dive
 
 A production-grade Retrieval-Augmented Generation (RAG) system that ingests Azure DevOps wiki pages and provides an intelligent conversational interface for querying organizational knowledge. Built with a **multi-stage advanced query pipeline**, **hybrid search**, and **multi-strategy retrieval** to maximize answer quality.
 
@@ -69,11 +69,11 @@ A production-grade Retrieval-Augmented Generation (RAG) system that ingests Azur
 
 | Component | File | Technology | Purpose |
 |-----------|------|-----------|---------|
-| **Chat UI** | `streamlit_app.py` | Streamlit `st.chat_message` | Multi-turn conversational interface with session metrics |
-| **Query Engine** | `query.py` | Python + Azure OpenAI | Full pipeline: contextualize → expand → search → rerank → generate |
-| **Search Client** | `azure_search_client.py` | `azure-search-documents` SDK | Index management, hybrid queries, neighbor chunk fetch |
-| **Ingestor** | `ingest.py` | Python | Crawl wiki, chunk, enrich, embed, delta upsert |
-| **Utilities** | `utils.py` | Config, chunker, embedder | Config loader (env/Key Vault), wiki fetcher, smart chunker, batch embedder |
+| **Chat UI** | `app.py` | Streamlit `st.chat_message` | Multi-turn conversational interface with session metrics |
+| **Query Engine** | `retriever.py` | Python + Azure OpenAI | Full pipeline: contextualize → expand → search → rerank → generate |
+| **Search Client** | `search_store.py` | `azure-search-documents` SDK | Index management, hybrid queries, neighbor chunk fetch |
+| **Ingestor** | `indexer.py` | Python | Crawl wiki, chunk, enrich, embed, delta upsert |
+| **Utilities** | `common.py` | Config, chunker, embedder | Config loader (env/Key Vault), wiki fetcher, smart chunker, batch embedder |
 | **Startup** | `startup.sh` | Bash | Azure App Service bootstrap (pip install + Streamlit launch) |
 | **Deploy** | `deploy.ps1` | PowerShell | One-command: fix LF → zip → deploy → monitor |
 
@@ -81,11 +81,11 @@ A production-grade Retrieval-Augmented Generation (RAG) system that ingests Azur
 
 ```
 wikiagent/
-├── streamlit_app.py          # Chat UI (entry point on Azure)
-├── query.py                  # Query pipeline (EnhancedQueryProcessor)
-├── azure_search_client.py    # Azure AI Search wrapper
-├── ingest.py                 # Ingestion orchestrator (RAGIngestor)
-├── utils.py                  # Config, fetcher, chunker, embedder
+├── app.py                    # Chat UI (entry point on Azure)
+├── retriever.py              # Query pipeline (EnhancedQueryProcessor)
+├── search_store.py           # Azure AI Search wrapper
+├── indexer.py                # Ingestion orchestrator (RAGIngestor)
+├── common.py                 # Config, fetcher, chunker, embedder
 ├── startup.sh                # Azure App Service startup
 ├── deploy.ps1                # Windows deploy script
 ├── requirements.txt          # Python dependencies
@@ -634,7 +634,7 @@ st.session_state
 
 ```
 ┌───────────────────────────────────────────────────┐
-│ 🔍 ADO Wiki Assistant                     [New ↻] │
+│ 🔍 WikiSage                               [New ↻] │
 ├────────────────────────────┬──────────────────────┤
 │                            │ 📊 Session Metrics   │
 │ 🧑 What does GW_BE...      │ Total Tokens: 12,336 │
@@ -689,14 +689,14 @@ INDEX_NAME=ado_wiki
 
 ```bash
 pip install -r requirements.txt
-python ingest.py
+python indexer.py
 ```
 
 ### 3. Query
 
 ```bash
-streamlit run streamlit_app.py     # Chat UI
-python query.py                    # CLI
+streamlit run app.py     # Chat UI
+python retriever.py                    # CLI
 ```
 
 ### 4. Deploy
@@ -755,7 +755,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for the full guide. Summary:
 | Vector dimension mismatch (1536 vs 3072) | Wrong embedding model | Set `AZURE_OPENAI_EMBED_MODEL=text-embedding-3-large`; delete index; re-ingest |
 | `$'\r': command not found` | Windows line endings in startup.sh | `deploy.ps1` auto-fixes this |
 | Key Vault overriding App Settings | `ENVIRONMENT=production` | Set `ENVIRONMENT=local` |
-| No search results | Empty index or wrong keys | Run `python ingest.py`; verify `SEARCH_SERVICE_NAME`/`KEY` |
+| No search results | Empty index or wrong keys | Run `python indexer.py`; verify `SEARCH_SERVICE_NAME`/`KEY` |
 | Application Error on cold start | pip install takes >230s | Set `WEBSITES_CONTAINER_START_TIME_LIMIT=600` |
 | `query_language` error | Old SDK incompatibility | Already removed from code |
 | `tags` null error | Null not allowed for Collection field | Already fixed: sends `[]` instead of `null` |

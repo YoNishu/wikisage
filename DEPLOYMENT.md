@@ -37,7 +37,7 @@ INDEX_NAME=ado_wiki
 
 ```powershell
 pip install -r requirements.txt
-python ingest.py
+python indexer.py
 ```
 
 - Fetches all wiki pages, chunks at 800 tokens with 200 overlap
@@ -72,7 +72,7 @@ cd wikiagent
 
 **Manual:**
 ```powershell
-Compress-Archive -Path streamlit_app.py,query.py,azure_search_client.py,utils.py,ingest.py,startup.sh,requirements.txt,runtime.txt -DestinationPath app.zip -Force
+Compress-Archive -Path app.py,retriever.py,search_store.py,common.py,indexer.py,startup.sh,requirements.txt,runtime.txt -DestinationPath app.zip -Force
 az webapp deploy -g <rg> -n <app> --src-path app.zip --type zip
 ```
 
@@ -97,7 +97,7 @@ The deploy script: fixes startup.sh line endings → builds zip → deploys → 
 |---------|----------|
 | Application Error page | Wait 3-5 min (cold start); check `WEBSITES_CONTAINER_START_TIME_LIMIT=600` |
 | `$'\r'` in logs | `deploy.ps1` auto-fixes; or manually convert startup.sh to LF |
-| Vector dimension mismatch | Delete index in Azure Portal → re-run `python ingest.py` |
+| Vector dimension mismatch | Delete index in Azure Portal → re-run `python indexer.py` |
 | Wrong embedding model in logs | Set `ENVIRONMENT=local` to bypass Key Vault; verify App Settings |
 | `query_language` error | Already fixed in code; ensure latest deploy |
 | No search results | Verify index has documents: check ingestion logs |

@@ -15,11 +15,11 @@ from dataclasses import dataclass, asdict
 from datetime import datetime
 import openai
 
-from utils import (
+from common import (
     ConfigManager, WikiContentFetcher, SmartContentChunker, 
     EmbeddingGenerator, ProcessingStats, ContentChunk, logger
 )
-from azure_search_client import AzureSearchVectorStore
+from search_store import AzureSearchVectorStore
 
 @dataclass
 class IngestionState:
@@ -60,7 +60,7 @@ class RAGIngestor:
         # Setup interrupt handler
         signal.signal(signal.SIGINT, self._handle_interrupt)
         
-        # OpenAI client for image/mermaid descriptions (used by ingest_images.py subclass)
+        # OpenAI client for image/mermaid descriptions (used by indexer_multimodal.py subclass)
         self.ai_client = openai.AzureOpenAI(
             api_version="2024-02-01",
             azure_endpoint=config["AZURE_OPENAI_ENDPOINT"],

@@ -2,9 +2,9 @@
 Multimodal RAG ingestion — text + images + mermaid diagrams.
 Populates the 'ado_wiki_images' index with GPT-4.1 vision descriptions.
 
-Usage: python ingest_images.py
+Usage: python indexer_multimodal.py
 
-This is the multimodal variant of ingest.py. It:
+This is the multimodal variant of indexer.py. It:
   - Downloads wiki attachment images via ADO Git Items API
   - Describes each image using GPT-4.1 vision (with surrounding page context)
   - Describes mermaid diagrams using GPT-4.1 text
@@ -17,8 +17,8 @@ To use this index at query time, set INDEX_MODE=multimodal in .env
 import os
 import sys
 from pathlib import Path
-from utils import ConfigManager, logger
-from ingest import RAGIngestor
+from common import ConfigManager, logger
+from indexer import RAGIngestor
 
 
 class MultimodalRAGIngestor(RAGIngestor):

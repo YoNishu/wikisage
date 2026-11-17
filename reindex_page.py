@@ -3,14 +3,14 @@ Targeted ingestion script — ingest a specific wiki page and all its subpages.
 Updates the existing ingestion_state.json so delta detection works correctly.
 
 Usage:
-    python ingest_page.py "/DRI"                          # Ingest /DRI and all subpages
-    python ingest_page.py "/Engineering/Feature Flags"   # Ingest specific section
-    python ingest_page.py "/DRI/TSG" --index-mode text     # Force text-only mode
-    python ingest_page.py "/DRI" --force                   # Force re-ingest even if unchanged
+    python reindex_page.py "/DRI"                          # Ingest /DRI and all subpages
+    python reindex_page.py "/Engineering/Feature Flags"   # Ingest specific section
+    python reindex_page.py "/DRI/TSG" --index-mode text     # Force text-only mode
+    python reindex_page.py "/DRI" --force                   # Force re-ingest even if unchanged
 
 Examples:
-    python ingest_page.py "/"                              # Re-ingest everything (same as ingest.py)
-    python ingest_page.py "/DRI/TSG/TSG Edge-HighLatency"  # Single page only (no subpages to recurse)
+    python reindex_page.py "/"                              # Re-ingest everything (same as indexer.py)
+    python reindex_page.py "/DRI/TSG/TSG Edge-HighLatency"  # Single page only (no subpages to recurse)
 """
 
 import os
@@ -22,9 +22,9 @@ from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
 
-from utils import ConfigManager, WikiContentFetcher, SmartContentChunker, EmbeddingGenerator, ProcessingStats, ContentChunk, logger
-from ingest import RAGIngestor, IngestionState
-from azure_search_client import AzureSearchVectorStore
+from common import ConfigManager, WikiContentFetcher, SmartContentChunker, EmbeddingGenerator, ProcessingStats, ContentChunk, logger
+from indexer import RAGIngestor, IngestionState
+from search_store import AzureSearchVectorStore
 
 
 class TargetedRAGIngestor(RAGIngestor):
@@ -207,9 +207,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python ingest_page.py "/DRI"                    # Ingest /DRI and all subpages
-  python ingest_page.py "/DRI/TSG" --force        # Force re-ingest even if unchanged
-  python ingest_page.py "/Engineering" --force   # Re-ingest the Engineering section
+  python reindex_page.py "/DRI"                    # Ingest /DRI and all subpages
+  python reindex_page.py "/DRI/TSG" --force        # Force re-ingest even if unchanged
+  python reindex_page.py "/Engineering" --force   # Re-ingest the Engineering section
         """
     )
     parser.add_argument("path", help="Wiki page path to ingest (e.g., '/Onboarding', '/Engineering')")

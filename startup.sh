@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-# Azure App Service startup script for ADO Wiki Assistant
-echo "Starting ADO Wiki Assistant on Azure App Service..."
+# Azure App Service startup script for WikiSage
+echo "Starting WikiSage on Azure App Service..."
 
 # Set default port if not provided
 export PORT=${PORT:-8501}
@@ -14,7 +14,7 @@ echo "Dependencies installed."
 
 # Start the Streamlit application
 echo "Starting Streamlit application on port $PORT..."
-python -m streamlit run streamlit_app.py \
+python -m streamlit run app.py \
     --server.port=$PORT \
     --server.address=0.0.0.0 \
     --server.headless=true \

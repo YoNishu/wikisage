@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Runs ingest_images.py as a resilient background process that survives
+    Runs indexer_multimodal.py as a resilient background process that survives
     Windows lock and prevents sleep/standby until ingestion completes.
 
 .DESCRIPTION
@@ -11,7 +11,7 @@
 
 .USAGE
     To launch in the background (survives terminal close + Windows lock):
-        Start-Process powershell -ArgumentList '-ExecutionPolicy Bypass -File "run_ingest_images.ps1"' -WindowStyle Hidden -WorkingDirectory (Get-Location)
+        Start-Process powershell -ArgumentList '-ExecutionPolicy Bypass -File "run_multimodal_indexer.ps1"' -WindowStyle Hidden -WorkingDirectory (Get-Location)
 #>
 
 $ErrorActionPreference = "Continue"
@@ -20,7 +20,7 @@ Set-Location $ScriptDir
 
 # --- Configuration ---
 $PythonExe    = "C:\Python314\python.exe"
-$Script       = "ingest_images.py"
+$Script       = "indexer_multimodal.py"
 $MaxRetries   = 3
 $RetryCooldown = 30  # seconds
 
